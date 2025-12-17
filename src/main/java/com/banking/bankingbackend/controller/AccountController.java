@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -32,5 +33,17 @@ public class AccountController {
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
         AccountDto savedAccount = accountService.createAccount(accountDto);
         return new ResponseEntity<>(savedAccount, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}/deposit")
+    public ResponseEntity<AccountDto> deposit(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        AccountDto patchedAccount = accountService.deposit(id, amount);
+        return ResponseEntity.ok(patchedAccount);
+    }
+
+    @PatchMapping("/{id}/withdraw")
+    public ResponseEntity<AccountDto> withdraw(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        AccountDto patchedAccount = accountService.withdraw(id, amount);
+        return ResponseEntity.ok(patchedAccount);
     }
 }
