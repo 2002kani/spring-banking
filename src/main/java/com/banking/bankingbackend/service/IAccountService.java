@@ -11,4 +11,5 @@ public interface IAccountService {
     AccountDto createAccount(AccountDto accountDto);
     AccountDto deposit(Long id, BigDecimal amount);
     AccountDto withdraw(Long id, BigDecimal amount);
+    void deleteAccountById(Long id);
 }

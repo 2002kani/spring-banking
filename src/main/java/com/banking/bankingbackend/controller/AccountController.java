@@ -46,4 +46,10 @@ public class AccountController {
         AccountDto patchedAccount = accountService.withdraw(id, amount);
         return ResponseEntity.ok(patchedAccount);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccountById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

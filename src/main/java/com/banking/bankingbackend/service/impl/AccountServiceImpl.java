@@ -67,4 +67,9 @@ public class AccountServiceImpl implements IAccountService {
         account.setBalance(account.getBalance().subtract(amount));
         return AccountMapper.mapToAccountDto(account);
     }
+
+    @Override
+    public void deleteAccountById(Long id) {
+        accountRepository.deleteById(id);
+    }
 }
