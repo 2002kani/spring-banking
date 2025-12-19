@@ -53,9 +53,9 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/balance")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable Long id) {
-        BigDecimal balance = accountService.getAccountById(id).getBalance();
+        BigDecimal balance = accountService.getAccountBalance(id);
         return ResponseEntity.ok(balance);
     }
 }

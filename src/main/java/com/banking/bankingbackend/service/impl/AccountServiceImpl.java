@@ -2,17 +2,20 @@ package com.banking.bankingbackend.service.impl;
 
 import com.banking.bankingbackend.dto.AccountDto;
 import com.banking.bankingbackend.entity.Account;
+import com.banking.bankingbackend.entity.Transaction;
+import com.banking.bankingbackend.enums.TransactionType;
 import com.banking.bankingbackend.exception.AccountNotFoundException;
 import com.banking.bankingbackend.exception.InsufficientFundException;
 import com.banking.bankingbackend.mapper.AccountMapper;
 import com.banking.bankingbackend.repository.IAccountRepository;
+import com.banking.bankingbackend.repository.ITransactionRepository;
 import com.banking.bankingbackend.service.IAccountService;
+import com.banking.bankingbackend.service.ITransactionService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.naming.InsufficientResourcesException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import java.util.List;
 public class AccountServiceImpl implements IAccountService {
 
     IAccountRepository accountRepository;
+    ITransactionRepository transactionRepository;
 
     @Override
     public List<AccountDto> getAllAccounts() {
@@ -50,8 +54,15 @@ public class AccountServiceImpl implements IAccountService {
     public AccountDto deposit(Long id, BigDecimal amount) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
-
         account.setBalance(account.getBalance().add(amount));
+
+        Transaction tx = new Transaction();
+        tx.setAccount(account);
+        tx.setType(TransactionType.DEPOSIT);
+        tx.setAmount(amount);
+
+        transactionRepository.save(tx);
+
         return AccountMapper.mapToAccountDto(account);
     }
 
@@ -65,6 +76,14 @@ public class AccountServiceImpl implements IAccountService {
             throw new InsufficientFundException("Not enough balance");
         }
         account.setBalance(account.getBalance().subtract(amount));
+
+        Transaction tx = new Transaction();
+        tx.setAccount(account);
+        tx.setType(TransactionType.WITHDRAWAL);
+        tx.setAmount(amount);
+
+        transactionRepository.save(tx);
+
         return AccountMapper.mapToAccountDto(account);
     }
 
@@ -76,7 +95,7 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     public BigDecimal getAccountBalance(Long id){
         Account account = accountRepository.findById(id)
-                .orElse(null);
+                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         return account.getBalance();
     }
 }
