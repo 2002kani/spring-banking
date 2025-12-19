@@ -52,4 +52,10 @@ public class AccountController {
         accountService.deleteAccountById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BigDecimal> getBalance(@PathVariable Long id) {
+        BigDecimal balance = accountService.getAccountById(id).getBalance();
+        return ResponseEntity.ok(balance);
+    }
 }

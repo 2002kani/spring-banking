@@ -72,4 +72,11 @@ public class AccountServiceImpl implements IAccountService {
     public void deleteAccountById(Long id) {
         accountRepository.deleteById(id);
     }
+
+    @Override
+    public BigDecimal getAccountBalance(Long id){
+        Account account = accountRepository.findById(id)
+                .orElse(null);
+        return account.getBalance();
+    }
 }
