@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ITransactionService {
     List<TransactionDto> getTransactionsByAccountId(Long accountId);
+    TransactionDto getTransactionByTransactionId(Long accountId, Long transactionId);
 }

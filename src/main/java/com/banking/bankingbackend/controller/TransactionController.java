@@ -13,14 +13,20 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/account/{accountId}/transaction")
+@RequestMapping("/api/accounts")
 public class TransactionController {
 
     ITransactionService transactionService;
 
-    @GetMapping
+    @GetMapping("/{accountId}/transactions")
     public ResponseEntity<List<TransactionDto>> getTransactionsByAccountId(@PathVariable Long accountId) {
         List<TransactionDto> transactions = transactionService.getTransactionsByAccountId(accountId);
         return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/{accountId}/transaction/{transactionId}")
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long accountId, @PathVariable Long transactionId) {
+        TransactionDto transaction = transactionService.getTransactionByTransactionId(accountId, transactionId);
+        return ResponseEntity.ok(transaction);
     }
 }
