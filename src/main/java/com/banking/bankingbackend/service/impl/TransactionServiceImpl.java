@@ -3,6 +3,7 @@ package com.banking.bankingbackend.service.impl;
 import com.banking.bankingbackend.dto.TransactionDto;
 import com.banking.bankingbackend.entity.Account;
 import com.banking.bankingbackend.entity.Transaction;
+import com.banking.bankingbackend.enums.TransactionType;
 import com.banking.bankingbackend.exception.AccountNotFoundException;
 import com.banking.bankingbackend.mapper.TransactionMapper;
 import com.banking.bankingbackend.repository.IAccountRepository;
@@ -46,5 +47,17 @@ public class TransactionServiceImpl implements ITransactionService {
         }
 
         return TransactionMapper.toDto(transaction);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TransactionDto> getTransactionByTransactionType(Long accountId, TransactionType type){
+        if(!accountRepository.existsById(accountId)) {
+            throw new RuntimeException("Account not found");
+        }
+
+        List<Transaction> transactions = transactionRepository.findByAccountIdAndType(accountId, type);
+
+        return transactions.stream().map(TransactionMapper::toDto).toList();
     }
 }
