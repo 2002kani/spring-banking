@@ -17,8 +17,14 @@ public class TransactionController {
     ITransactionService transactionService;
 
     @GetMapping("/{accountId}/transactions")
-    public ResponseEntity<List<TransactionDto>> getTransactionsByAccountId(@PathVariable Long accountId) {
-        List<TransactionDto> transactions = transactionService.getTransactionsByAccountId(accountId);
+    public ResponseEntity<List<TransactionDto>> getTransactionsByAccountId(@PathVariable Long accountId, @RequestParam(required = false) TransactionType type) {
+
+        if(type == null){
+            List<TransactionDto> transactions = transactionService.getTransactionsByAccountId(accountId);
+            return ResponseEntity.ok(transactions);
+        }
+
+        List<TransactionDto> transactions = transactionService.getTransactionByTransactionType(accountId, type);
         return ResponseEntity.ok(transactions);
     }
 
@@ -26,11 +32,5 @@ public class TransactionController {
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long accountId, @PathVariable Long transactionId) {
         TransactionDto transaction = transactionService.getTransactionByTransactionId(accountId, transactionId);
         return ResponseEntity.ok(transaction);
-    }
-
-    @GetMapping("/{accountId}/transactions")
-    public ResponseEntity<List<TransactionDto>> getTransactionByTransactionType(@PathVariable Long accountId, @RequestParam TransactionType type) {
-        List<TransactionDto> transactions = transactionService.getTransactionByTransactionType(accountId, type);
-        return ResponseEntity.ok(transactions);
     }
 }
